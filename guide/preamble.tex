@@ -1,0 +1,97 @@
+\documentclass[twoside, 10pt]{book}
+\usepackage[a5paper]{geometry}
+
+\usepackage[nooverlap]{ruby}
+%\renewcommand{\rubysep}{-0.35cm}
+\renewcommand{\rubysize}{0.8}
+\newcommand{\transliterate}[2]{\ruby{\H{#1}}{\LR{\grey{\trans{#2}}}}}
+\newcommand{\transcribe}[2]{\ruby{\H{#1}}{\LR{\grey{\trans{#2}}}}}
+\newcommand{\translate}[2]{\H{#1}~\grey{‘#2’}}
+\newcommand{\sofit}[1]{\textsc{#1}}
+
+\usepackage{xcolor}
+\newcommand{\grey}[1]{\textcolor{gray}{#1}}
+
+\usepackage{environ}
+\usepackage{longtable}
+
+
+\newcounter{paragraphno}
+\setcounter{paragraphno}{0}
+\newcommand{\newparagraph}{\stepcounter{paragraphno}\setcounter{sentenceno}{0}}
+\newcounter{sentenceno}
+\setcounter{sentenceno}{0}
+
+\usepackage{titlesec}
+%\titleformat{\section}[leftmargin]
+%{\normalfont
+%	\titlerule*[.6em]{\bfseries.}%
+%	\vspace{6pt}%
+%	}
+%	{\thesection}{.5em}{}
+%\titlespacing{\section}
+%{2pc}{1.5ex plus .1ex minus .2ex}{0pc}
+\newcommand{\sectionfont}{\fontspec{Fontin}}
+\titleformat{\section}{\sectionfont\Large}{\textbf{{\thesection}}\sectionornament}{0.0cm}{}[\titlerule]
+\titleformat{\subsection}{\sectionfont\large}{\textbf{{\thesubsection}}\sectionornament}{0.0cm}{}[\titleline{\color{gray}\titlerule}] % Solution from http://tex.stackexchange.com/questions/40088/strange-behaviour-of-titlesec-with-colored-titlerule
+
+
+
+%\renewcommand{\labelitemi}{\symbolglyph{▷}}
+%\renewcommand{\labelitemii}{\symbolglyph{▻}}
+%\renewcommand{\labelitemii}{}
+%\renewcommand{\labelitemiii}{\symbolglyph{▹}}
+\NewEnviron{gloss}[2]
+%{\begin{description}\begin{desclistitemenv}{\ruby{\H{#1}}{\grey{#2}}}}
+%			{\end{desclistitemenv}\end{description}}
+{
+	\begin{description}
+		\item \ruby{\H{\addfontfeature{FakeBold=0}#1}}{\grey{#2}}\hspace{1em}\grey{\symbolglyph{⁘}}\hspace{1em}\BODY
+	\end{description}
+}
+\newcommand{\glsec}[1]{{\fontspec{Vesper Pro}\textsc{#1.}}\hspace{1em}}
+
+\usepackage{marginnote}
+\usepackage{framed}
+\NewEnviron{sentence}[3]{
+	\stepcounter{sentenceno}
+
+	\begin{longtable}{p{0.48\linewidth}p{0.48\linewidth}}
+		\marginnote{\begin{minipage}{1.5cm}{\begin{center}\color{gray}{\fontspec{Vesper Pro}\textsc{Pooh}}\\\arabic{paragraphno}:\arabic{sentenceno}\end{center}}\end{minipage}}%
+		\trans{#2} & \RL{\H{#1\hfill~}}\\[1em]
+		\multicolumn{2}{p{1\linewidth}}{#3}
+	\end{longtable}
+
+	\BODY
+
+	\vspace{0.5cm}
+	\begin{center}***\end{center}
+	\vspace{0.5cm}
+}
+
+
+
+\usepackage{xltxtra}
+\usepackage{fontspec}
+\usepackage{bidi}
+\setmainfont{Vesper Pro}
+\renewcommand{\H}[1]{\RL{\fontspec[Script=Hebrew]{Rutz_OE Regular Pro}#1}}
+\newcommand{\trans}[1]{\LR{\fontspec{Vesper Pro}\textit{\addfontfeature{HyphenChar=None}#1}}}
+\newcommand{\gp}[1]{\LR{\fontspec{Vesper Pro}#1}}
+\newcommand{\hl}[1]{\textbf{#1}}
+\newcommand{\symbolglyph}[1]{{\fontspec{Symbola}#1}}
+\newcommand{\masc}{\symbolglyph{♂}}
+\newcommand{\fem}{\symbolglyph{♀}}
+
+\newfontfamily{\GlotSubstFont}[Script=Hebrew]{Palemonas MUFI}
+
+\XeTeXinterchartokenstate=1
+\newXeTeXintercharclass\GlotSubst
+
+\XeTeXcharclass"02BE=\GlotSubst
+\XeTeXcharclass"02BF=\GlotSubst
+
+\XeTeXinterchartoks 0 \GlotSubst = {\begingroup\GlotSubstFont}
+\XeTeXinterchartoks 255 \GlotSubst = {\begingroup\GlotSubstFont}
+\XeTeXinterchartoks \GlotSubst 0 = {\endgroup}
+\XeTeXinterchartoks \GlotSubst 255 = {\endgroup}
